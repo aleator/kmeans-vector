@@ -49,7 +49,7 @@ data Cluster = Cluster {
 --     s = map L.sort
 
 
-{-#INLINE distance#-}
+-- {-#INLINE distance#-}
 distance :: Point a -> Vec -> Double
 distance (u,_) v = V.sum $ V.zipWith (\a b -> (a - b)^2) u v
 
@@ -60,13 +60,13 @@ partition k vs = go vs
           (vs', vss) -> vs' : go vss
         n = (length vs + k - 1) `div` k
 
-{-#INLINE computeClusters#-}
+-- {-#INLINE computeClusters#-}
 computeClusters :: [[Vec]] -> [Cluster]
 computeClusters = zipWith Cluster [0..] . map f
   where f (x:xs) = let (n, v) = L.foldl' (\(k, s) v' -> (k+1, V.zipWith (+) s v')) (1, x) xs
                    in V.map (\x -> x / (fromIntegral n)) v
 
-{-#INLINE regroupPoints#-}
+-- {-#INLINE regroupPoints#-}
 regroupPoints :: forall a. [Cluster] -> [Point a] -> [[Point a]]
 regroupPoints clusters points = L.filter (not.null) . G.toList . G.accum (flip (:)) (G.replicate (length clusters) []) . map closest $ points
  where
